@@ -134,7 +134,8 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers'])
     url: '/centros',
     views: {
       'menuContent': {
-        templateUrl: 'templates/centros.html'
+        templateUrl: 'templates/centros.html',
+        controller: 'CentrosController'
       }
     }
   })
