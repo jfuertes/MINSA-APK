@@ -1,0 +1,27 @@
+<ion-view view-title="Buscar">
+  <ion-content has-header="true" padding="true" class="padding">
+
+
+  	<div class="list">
+	  <label class="item item-input">
+	    <input type="email" placeholder="Correo Electronico">
+	  </label>
+	  <label>
+	    <button class="button button-block button-positive icon-left ion-plus-circled" type="submit">Agregar Correo</button>
+	  </label>
+	</div>
+
+	<div ng-hide="showCorreos">
+		<h5>No existen correos registrados.</h5>
+	</div>
+
+
+	<div ng-show="showCorreos">
+		<h4>Correos Registrados:</h4>
+		<ul class="list">
+		    <li class="item" ng-repeat="ad in infoAdicional">{{ad.email}}</li>
+		</ul>
+	</div>
+
+  </ion-content>
+</ion-view>

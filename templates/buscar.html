@@ -1,0 +1,69 @@
+<ion-view view-title="Buscar">
+  <ion-content has-header="true" padding="true" class="padding">
+
+   <div ng-hide="showDatos">
+    <form ng-submit="buscarNeneByCNV(neneData)">
+     <h3>CARNÉ DE VACUNACIÓN ELECTRÓNICO</h3>
+      <div class="row row-center">
+        <div class="col">Por favor complete los campos:</div>
+      </div>
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Tipo:
+        </div>
+        <select ng-model="neneData.tipo">
+                  <option  value="1">CNV del Niño</option>
+                  <option value="2">DNI del Niño</option>
+                  <option value="3">DNI de la madre</option>
+        </select>
+      </label>
+    
+      <label class="item item-input col-30">
+        <div class="input-label">
+          Número:
+        </div>
+        <input type="text" ng-model="neneData.numero" />
+      </label>
+   
+      <label class="item">
+          <button class="button button-block button-positive icon-left ion-search" type="submit">Buscar</button>
+      </label>
+    </form></div>
+
+
+<div ng-show="showTable"  class="card">
+     <div class="row header" >
+          <div class="col col-38">N° de CNV</div>
+          <div class="col col-27">Fecha Nac.</div>
+          <div class="col col-15">Sexo</div>
+          <div class="col col-15">Peso (gr)</div>
+          <div class="col col-5">Talla (cm)</div>
+        </div>
+        <div class="row item item-divider" ng-repeat="n in ninos_ws " ng-click="selecNino($index)">
+          <div class="col col-38"><button class="button button-small">{{n.NuCnv}}</button></div>
+          <div class="col col-27"><button class="button button-small">{{n.FecNac}}</button></div>
+          <div class="col col-15"><button class="button button-small">{{n.Sexo}}</button></div>
+          <div class="col col-15"><button class="button button-small">{{n.Peso}}</button></div>
+          <div class="col col-55"><button class="button button-small">{{n.Talla}}</button></div>
+          
+        </div>
+</div>
+
+
+<div ng-show="showDatos">
+  <ul class="list">
+    <li class="item">Tipo de Documento : {{nino_ws.Tipo}}</li>
+    <li class="item">Número : {{nino_ws.NuCnv}}</li>
+    <li class="item">Sexo : {{nino_ws.Sexo}}</li>
+    <li class="item">Fecha de Nacimiento : {{nino_ws.FecNac}}</li>
+    <li class="item">Peso al Nacer (gr) : {{nino_ws.Peso}}</li>
+    <li class="item">Talla al Nacer (cm) : {{nino_ws.Talla}}</li>
+  
+</ul>
+<button class="button" ng-click="consularInicio()">Volver</button>
+<button class="button" ng-click="showtable()">Calendario</button>
+</div>
+
+  </ion-content>
+</ion-view>
