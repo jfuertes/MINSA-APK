@@ -130,6 +130,15 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers'])
       }
     }
   })
+    .state('app.registrar', {
+    url: '/registrar',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/registrar.html',
+        controller: 'RegistrarController'
+      }
+    }
+  })
   .state('app.centros', {
     url: '/centros',
     views: {

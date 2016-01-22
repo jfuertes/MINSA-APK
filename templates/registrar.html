@@ -1,0 +1,96 @@
+<ion-view view-title="Adicional">
+  <ion-content padding="true" has-header="true">
+    <form ng-submit="vacunarNene(nino_nw)">
+      <h4>Registrar Niño</h4>
+      <b>Rellene el formulario para su verificación</b>
+
+      <div class="list">
+        <label class="item item-input">
+          <span class="input-label">Número de DNI(*)</span>
+          <input type="number" step="any" ng-model="nino_nw.nro_documento">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Nombres(*):</span>
+          <input type="text" step="any" ng-model="nino_nw.nombres">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Apellido Paterno(*)</span>
+          <input type="text" ng-model="nino_nw.apellido_paterno">
+        </label>
+
+         <label class="item item-input">
+          <span class="input-label">Apellido Materno(*)</span>
+          <input type="text" ng-model="nino_nw.apellido_materno">
+        </label>
+
+         <label class="item item-input">
+          <span class="input-label">Fecha de Nacimiento(*)</span>
+          <input type="date" ng-model="nino_nw.fecha_nac">
+        </label>
+
+         <label class="item item-input">
+          <span class="input-label">Sexo(*)</span>
+           <select class="" ng-model="nino_nw.sexo">
+              <option value="F">Femenino</option>
+              <option value="M">Masculino</option>
+            </select>
+        </label>
+
+         <label class="item item-input">
+          <span class="input-label">Peso al Nacer (grs)(*)</span>
+          <input type="number" min=1000 max=5000 ng-model="nino_nw.peso">
+        </label>
+
+         <label class="item item-input">
+          <span class="input-label">Talla al Nacer (cms)(*)</span>
+          <input type="number" min=0 max=100 ng-model="nino_nw.talla">
+        </label>
+   
+        <b>Datos de los Padres:</b>
+
+
+        <label class="item item-input">
+          <span class="input-label">DNI del Padre(*)</span>
+          <input type="number" ng-model="nino_nw.dni_padre">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Nombre del Padre(*)</span>
+          <input type="text" ng-model="nino_nw.nombre_padre">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">DNI de la Madre(*)</span>
+          <input type="number" ng-model="nino_nw.dni_madre">
+        </label>
+
+        <label class="item item-input">
+          <span class="input-label">Nombre de la Madre(*)</span>
+          <input type="text" ng-model="nino_nw.nombre_madre">
+        </label>
+</br>
+        <label class="item item-input">
+          <span class="input-label">Teléfono de Referencia(*)</span>
+          <input type="number" min="0" ng-model="nino_nw.telefono">
+        </label>
+
+         <label class="item item-input">
+          <span class="input-label">Dirección del Niño</span>
+          <input type="text" ng-model="nino_nw.direccion">
+        </label>
+
+         <label class="item">
+          <span>(*) Datos Obligatorios</span>
+          
+        </label>
+
+        <label class="item">
+          	<button class="button button-block button-positive" type="submit">Guardar</button>
+        </label>
+
+      </div>
+    </form>
+  </ion-content>
+</ion-view>
