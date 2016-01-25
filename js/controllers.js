@@ -467,27 +467,20 @@ $scope.showtable = function() {
   $scope.vacunarNene = function(nino_nw){
     console.log(nino_nw);
     $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-        //$http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php',  data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
           $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
-            alert(response);
             if(response.success){
               console.log(response.success);
-             // $scope.neneData = {"tipo":"2", "numero":nino_nw.nro_documento};
-              alert(response);
-              //$ionicPopup.alert({ title: 'Bienvenido', template: 'Bienvenido ' + response.success.nombres });
               $location.path('/app/buscar').replace();
             }
             if (response.error) {
               $ionicPopup.alert({ title: 'Error', template: response.error });
-              //alert(response.error);
             }
         }).error(function(){
           $ionicLoading.hide();
           $ionicPopup.alert({ title: 'Error', template: 'Lo lamento, el servidor no responde, por favor intentelo mas tarde.' });
         });
   };
-//vacunarNene
 })
 
 

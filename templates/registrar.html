@@ -1,38 +1,38 @@
 <ion-view view-title="Adicional">
   <ion-content padding="true" has-header="true">
-    <form ng-submit="vacunarNene(nino_nw)">
+    <form name="myForm" ng-submit="vacunarNene(nino_nw)">
       <h4>Registrar Niño</h4>
       <b>Rellene el formulario para su verificación</b>
 
       <div class="list">
         <label class="item item-input">
           <span class="input-label">Número de DNI(*)</span>
-          <input type="number" step="any" ng-model="nino_nw.nro_documento">
+          <input type="number" name="nro_documento" ng-minlength="8" ng-maxlength="8" step="any" ng-model="nino_nw.nro_documento" required>
         </label>
 
         <label class="item item-input">
           <span class="input-label">Nombres(*):</span>
-          <input type="text" step="any" ng-model="nino_nw.nombres">
+          <input type="text" name="nombres" ng-model="nino_nw.nombres" required>
         </label>
 
         <label class="item item-input">
           <span class="input-label">Apellido Paterno(*)</span>
-          <input type="text" ng-model="nino_nw.apellido_paterno">
+          <input type="text" name="apellido_paterno" ng-model="nino_nw.apellido_paterno" required>
         </label>
 
          <label class="item item-input">
           <span class="input-label">Apellido Materno(*)</span>
-          <input type="text" ng-model="nino_nw.apellido_materno">
+          <input type="text" name="apellido_materno" ng-model="nino_nw.apellido_materno" required>
         </label>
 
          <label class="item item-input">
           <span class="input-label">Fecha de Nacimiento(*)</span>
-          <input type="date" ng-model="nino_nw.fecha_nac">
+          <input type="date" name="fecha_nac" ng-model="nino_nw.fecha_nac" required>
         </label>
 
          <label class="item item-input">
           <span class="input-label">Sexo(*)</span>
-           <select class="" ng-model="nino_nw.sexo">
+           <select class="" name="sexo" ng-model="nino_nw.sexo" required>
               <option value="F">Femenino</option>
               <option value="M">Masculino</option>
             </select>
@@ -40,56 +40,69 @@
 
          <label class="item item-input">
           <span class="input-label">Peso al Nacer (grs)(*)</span>
-          <input type="number" min=1000 max=5000 ng-model="nino_nw.peso">
+          <input type="number" name="peso" min=1000 max=5000 ng-model="nino_nw.peso" required>
         </label>
 
          <label class="item item-input">
           <span class="input-label">Talla al Nacer (cms)(*)</span>
-          <input type="number" min=0 max=100 ng-model="nino_nw.talla">
+          <input type="number" name="talla" min=0 max=100 ng-model="nino_nw.talla" required>
         </label>
    
         <b>Datos de los Padres:</b>
 
 
         <label class="item item-input">
-          <span class="input-label">DNI del Padre(*)</span>
-          <input type="number" ng-model="nino_nw.dni_padre">
+          <span class="input-label">DNI del Padre</span>
+          <input type="number"  step="any" ng-model="nino_nw.dni_padre">
         </label>
 
         <label class="item item-input">
-          <span class="input-label">Nombre del Padre(*)</span>
+          <span class="input-label">Nombre del Padre</span>
           <input type="text" ng-model="nino_nw.nombre_padre">
         </label>
 
         <label class="item item-input">
-          <span class="input-label">DNI de la Madre(*)</span>
-          <input type="number" ng-model="nino_nw.dni_madre">
+          <span class="input-label">DNI de la Madre</span>
+          <input type="number" step="any" ng-model="nino_nw.dni_madre">
         </label>
 
         <label class="item item-input">
-          <span class="input-label">Nombre de la Madre(*)</span>
+          <span class="input-label">Nombre de la Madre</span>
           <input type="text" ng-model="nino_nw.nombre_madre">
         </label>
 </br>
         <label class="item item-input">
-          <span class="input-label">Teléfono de Referencia(*)</span>
-          <input type="number" min="0" ng-model="nino_nw.telefono">
+          <span class="input-label">Teléfono de Referencia</span>
+          <input type="number" step="any" min="0" ng-model="nino_nw.telefono">
         </label>
 
          <label class="item item-input">
           <span class="input-label">Dirección del Niño</span>
           <input type="text" ng-model="nino_nw.direccion">
         </label>
-
-         <label class="item">
-          <span>(*) Datos Obligatorios</span>
-          
-        </label>
-
+          <label class="item">
+            <p ng-show="myForm.nro_documento.$error.required">* Numero de DNI del niño es obligatorio</p>
+            <p ng-show="myForm.nombres.$error.required">* Nombres del niño es obligatorio</p>
+            <p ng-show="myForm.apellido_paterno.$error.required">* Apellido paterno del niño es obligatorio</p>
+            <p ng-show="myForm.apellido_materno.$error.required">* Apellido materno del niño es obligatorio</p>
+            <p ng-show="myForm.fecha_nac.$error.required">* Fecha de nacimiento del niño es obligatorio</p>
+            <p ng-show="myForm.sexo.$error.required">* El sexo del niño es obligatorio</p>
+            <p ng-show="myForm.peso.$error.required">* El peso del niño es obligatorio</p>
+            <p ng-show="myForm.peso.$error.max">* El peso del niño esta en gramos</p>
+            <p ng-show="myForm.peso.$error.min">* El peso del niño esta en gramos</p>
+            <p ng-show="myForm.talla.$error.required">* La talla del niño es obligatorio</p>
+            <p ng-show="myForm.talla.$error.max">* La talla del niño esta en centimentros</p>
+            <p ng-show="myForm.talla.$error.min">* La talla del niño esta en centimentros</p>
+          </label>
+     
         <label class="item">
-          	<button class="button button-block button-positive" type="submit">Guardar</button>
+        <div class="padding">
+          	<button class="button button-block button-positive" type="submit">Guardar</button></div>
         </label>
-
+        <label class="item">
+          <span>(*) Datos Obligatorios</span>
+          </label>
+         
       </div>
     </form>
   </ion-content>
