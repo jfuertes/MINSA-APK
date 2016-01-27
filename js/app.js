@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGmapgoogle-maps', 'ngCordova'])
+angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGmapgoogle-maps', 'ngCordova','ui.router'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -20,6 +20,9 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGma
       StatusBar.styleDefault();
     }
   });
+  $ionicPlatform.registerBackButtonAction(function(e){
+      e.preventDefault();
+  }, 1000);
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -162,6 +165,7 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGma
     })
     .state('app.principal', {
       url: '/principal',
+      cache:false,
       views: {
         'menuContent': {
           templateUrl: 'templates/principal.html',
