@@ -1,4 +1,9 @@
 angular.module('starter.controllers', ['uiGmapgoogle-maps', 'ngCordova', 'ui.router'])
+  .factory('NombreServer', function() {
+    return {
+        SERVER_IP : 'http://esdeporvida.com/projects/minsa'
+    };
+  })
 
   .filter('sexoFilter', function(){
     return function(input){
@@ -196,25 +201,15 @@ document.addEventListener('deviceready', function() {
 
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
 .controller('PrincipalController', function($scope, $stateParams) {})
-.controller('VacunaController', function($scope, $stateParams, $http, $rootScope) {
+
+.controller('VacunaController', function($scope, $stateParams, $http, $rootScope, NombreServer) {
   console.log('stateParams');
   $scope.getVacuna = function(id) {
     $http(
       {
         method:'GET',
-        url: 'http://esdeporvida.com/projects/minsa/api/android/getVacuna.php?id=' + id,
+        url: NombreServer.SERVER_IP+'/api/android/getVacuna.php?id=' + id,
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }
       }).success(function(response) {
           $scope.vacuna = response;
@@ -222,11 +217,13 @@ document.addEventListener('deviceready', function() {
   };
   $scope.getVacuna($stateParams.vacunaID);
 })
-.controller('VacunasController', function($scope, $stateParams, $rootScope, $http) {
+.controller('VacunasController', function($scope, $stateParams, $rootScope, $http, NombreServer) {
   console.log('VacunasController');
     $scope.getVacunas=function() {
-      $http({method:'GET',url: 'http://esdeporvida.com/projects/minsa/api/android/getVacunas.php', headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+      $http({method:'GET', url: NombreServer.SERVER_IP+'/api/android/getVacunas.php', headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
         $rootScope.vacunas = response;
+      }).error(function(response) {
+
       });
     };
     $scope.getVacunas();
@@ -234,14 +231,14 @@ document.addEventListener('deviceready', function() {
 .controller('ResultadosDetailController', function($scope, $stateParams) { })
 
 
-.controller('ResultadosController', function($scope, $location,$rootScope, $http, $ionicLoading) {
+.controller('ResultadosController', function($scope, $location,$rootScope, $http, $ionicLoading, NombreServer) {
   console.log('ResultadosController ');
   $scope.getChildVacunas = function () {
     console.log('ResultadosController > getChildVacunas');
     $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
     $http({
       method:'POST',
-      url: 'http://esdeporvida.com/projects/minsa/api/android/getVacunasA.php',
+      url: NombreServer.SERVER_IP+'/api/android/getVacunasA.php',
       data: $.param({data:$rootScope.nino_ws}),
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
       console.log('ResultadosController > getChildVacunas : success > response', response);
@@ -327,7 +324,7 @@ $ionicLoading.hide();
   };
 })*/
 
-.controller('BuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope) {
+.controller('BuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope, NombreServer) {
   $scope.showTable=false;
   $rootScope.showDatos = false;
   $scope.neneData = {"tipo":"3", "numero":42579084};
@@ -342,7 +339,7 @@ $ionicLoading.hide();
         $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
            $http(
             {method:'GET',
-            url: 'http://esdeporvida.com/projects/minsa/api/wsByNumero.php?numero='+$scope.neneData.numero,
+            url: NombreServer.SERVER_IP+'/api/wsByNumero.php?numero='+$scope.neneData.numero,
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
               console.log('BuscarController > buscarNeneByCNV : done');
 
@@ -359,14 +356,13 @@ $ionicLoading.hide();
                 console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
                 console.log('BuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
                 $rootScope.showDatos=true;    
-                //$location.path('/app/resultados').replace();
             } else{
                 $ionicLoading.hide();
                 console.log('BuscarController > buscarNeneByCNV : done : else');
-                alert("Lo lamento, " + response.error);
+                $ionicPopup.alert({ title: 'Error', template: "Lo lamento, " + response.error });
               }
           }).error(function() {
-              alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+              $ionicPopup.alert({ title: 'Error', template: "Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde." });
               $ionicLoading.hide();
           });
   
@@ -377,7 +373,7 @@ $ionicLoading.hide();
             $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
               $http(
                 {method:'GET',
-                url: 'http://esdeporvida.com/projects/minsa/api/wsbyDNI.php?numero='+$scope.neneData.numero,
+                url: NombreServer.SERVER_IP+'/api/wsbyDNI.php?numero='+$scope.neneData.numero,
                 headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
                   console.log('BuscarController > buscarNeneByCNV : done');
                   delete $rootScope.nino_ws;
@@ -400,10 +396,10 @@ $ionicLoading.hide();
                   } else{
                     $ionicLoading.hide();
                     console.log('BuscarController > buscarNeneByCNV : done : else');
-                    alert("Lo lamento, " + response.error);
+                    $ionicPopup.alert({ title: 'Error', template: "Lo lamento, " + response.error });
                   }
               }).error(function() {
-                  alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+                  $ionicPopup.alert({ title: 'Error', template: "Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde." });
                   $ionicLoading.hide();
               });
         }
@@ -413,7 +409,7 @@ $ionicLoading.hide();
         $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
           $http(
             {method:'GET',
-            url: 'http://esdeporvida.com/projects/minsa/api/wsByDniMadre.php?numero='+$scope.neneData.numero,
+            url: NombreServer.SERVER_IP+'/api/wsByDniMadre.php?numero='+$scope.neneData.numero,
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
               console.log('BuscarController > buscarNeneByCNV : done');
               delete $rootScope.nino_ws;
@@ -438,10 +434,10 @@ $ionicLoading.hide();
              } else{
                 $ionicLoading.hide();
                 console.log('BuscarController > buscarNeneByCNV : done : else');
-                alert("Lo lamento, " + response.error);
+                $ionicPopup.alert({ title: 'Error', template: "Lo lamento, " + response.error });
               }
           }).error(function() {
-              alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+              $ionicPopup.alert({ title: 'Error', template: 'Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.' });
               $ionicLoading.hide();
           });
 
@@ -483,7 +479,7 @@ $scope.showtable = function() {
     $ionicLoading.show({content: 'Registrando Informacion Adicional...', showBackdrop: true });
     $http({
       method:'POST',
-      url: 'http://esdeporvida.com/projects/minsa/api/android/adicional.php',
+      url: NombreServer.SERVER_IP+'/api/android/adicional.php',
       data: $.param({nino_ws:$scope.nino_ws, usuario:$scope.usuario }),
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
       $ionicLoading.hide();
@@ -514,7 +510,7 @@ $scope.showtable = function() {
     $ionicLoading.show({content: 'Registrando al chamaco...', showBackdrop: true });
     $http({
       method:'POST',
-      url: 'http://esdeporvida.com/projects/minsa/api/android/vacunarNene.php',
+      url: NombreServer.SERVER_IP+'/api/android/vacunarNene.php',
       data: $.param({item:$scope.item, nino_ws:$scope.nino_ws, usuario:$scope.usuario }),
       headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
       $ionicLoading.hide();
@@ -551,7 +547,7 @@ $scope.showtable = function() {
   $scope.getChildVacunas = function () {
     //console.log('ProfesionalVacunarController > getChildVacunas');
     $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
-    $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/getVacunasA.php', data: $.param({data:$rootScope.nino_ws}), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+    $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/getVacunasA.php', data: $.param({data:$rootScope.nino_ws}), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
       console.log('ProfesionalVacunarController > getChildVacunas : success > response', response);
       $scope.vacunas = response;
       $ionicLoading.hide();
@@ -577,10 +573,10 @@ $scope.showtable = function() {
   $scope.checkData();
 })
 
-.controller('ProfesionalBuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope, $ionicHistory) {
+.controller('ProfesionalBuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope, $ionicHistory, NombreServer) {
  $scope.showTable=false;
   console.log('ProfesionalBuscarController > $rootScope.usuario', $rootScope.usuario);
-  $scope.neneData = {"tipo":"3", "numero":42579084};
+  $scope.neneData = {"tipo":"3", "numero":""};
   //$scope.neneData = {"numero":1000999595};
   $scope.buscarNeneByCNV = function() {
     if($scope.neneData.tipo=="1"){
@@ -588,7 +584,7 @@ $scope.showtable = function() {
         $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
           $http(
             {method:'GET',
-            url: 'http://esdeporvida.com/projects/minsa/api/wsByNumero.php?numero='+$scope.neneData.numero,
+            url: NombreServer.SERVER_IP+'/api/wsByNumero.php?numero='+$scope.neneData.numero,
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
               console.log('ProfesionalBuscarController > buscarNeneByCNV : done');
               delete $rootScope.nino_ws;
@@ -616,7 +612,7 @@ $scope.showtable = function() {
             $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
               $http(
                 {method:'GET',
-                url: 'http://esdeporvida.com/projects/minsa/api/wsbyDNI.php?numero='+$scope.neneData.numero,
+                url: NombreServer.SERVER_IP+'/api/wsbyDNI.php?numero='+$scope.neneData.numero,
                 headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
                   console.log('BuscarController > buscarNeneByCNV : done');
                   delete $rootScope.nino_ws;
@@ -653,7 +649,7 @@ $scope.showtable = function() {
         $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
           $http(
             {method:'GET',
-            url: 'http://esdeporvida.com/projects/minsa/api/wsByDniMadre.php?numero='+$scope.neneData.numero,
+            url: NombreServer.SERVER_IP+'/api/wsByDniMadre.php?numero='+$scope.neneData.numero,
             headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
               console.log('BuscarController > buscarNeneByCNV : done');
               delete $rootScope.nino_ws;
@@ -703,7 +699,7 @@ $scope.showtable = function() {
 
 
 })
-.controller('LogeoController', function($scope, $state, $http, $ionicLoading, $location, $rootScope, $ionicPopup) {
+.controller('LogeoController', function($scope, $state, $http, $ionicLoading, $location, $rootScope, $ionicPopup, NombreServer) {
   console.log('LogeoController');
   if (!$rootScope.usuario) {
     console.log('LogeoController > if');
@@ -712,7 +708,7 @@ $scope.showtable = function() {
       if( $scope.loginData.username && $scope.loginData.password ) {
         console.log($scope.loginData);
         $scope.loading = $ionicLoading.show({content: 'Iniciando sesion...', showBackdrop: true });
-        $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/login.php', data:$.param($scope.loginData), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+        $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/login.php', data:$.param($scope.loginData), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
             if(response.success){
               $rootScope.usuario = response.success;
@@ -752,7 +748,7 @@ $scope.showtable = function() {
     nino_nw.fecha_nac = fecha;
     console.log(nino_nw);
     $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-          $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+          $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
             //alert(response);
             if(response.success){
@@ -776,7 +772,7 @@ $scope.showtable = function() {
 
  $http(
         {method:'GET',
-        url: 'http://esdeporvida.com/projects/minsa/api/android/getCorreos.php?numero='+$rootScope.nino_ws.NuCnv,
+        url: NombreServer.SERVER_IP+'/api/android/getCorreos.php?numero='+$rootScope.nino_ws.NuCnv,
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
           console.log('ProfesionalBuscarController > buscarNeneByCNV : done');
          
@@ -801,7 +797,7 @@ $scope.showtable = function() {
 
     $scope.agregarEmail = function(correo){
         $scope.loading = $ionicLoading.show({content: 'Guardando...', showBackdrop: true });        
-          $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/agregarCorreo.php', data:$.param({email : correo.new, NuCnv: $rootScope.nino_ws.NuCnv }), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+          $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/agregarCorreo.php', data:$.param({email : correo.new, NuCnv: $rootScope.nino_ws.NuCnv }), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
             if(response.success){
               console.log(response.success);
@@ -825,7 +821,7 @@ $scope.showtable = function() {
 
  $http(
         {method:'GET',
-        url: 'http://esdeporvida.com/projects/minsa/api/android/getInfoAdicional.php?numero='+$rootScope.nino_ws.NuCnv,
+        url: NombreServer.SERVER_IP+'/api/android/getInfoAdicional.php?numero='+$rootScope.nino_ws.NuCnv,
         headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
           console.log('ProfesionalBuscarController > buscarNeneByCNV : done');
          
@@ -864,7 +860,7 @@ $scope.showtable = function() {
     $scope.min=9999999;
 
       $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-          $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/getCentros.php', headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+          $http({method:'POST',url: NombreServer.SERVER_IP+'/api/getCentros.php', headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
             $scope.data = response;
 
