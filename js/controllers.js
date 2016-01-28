@@ -745,12 +745,19 @@ $scope.showtable = function() {
   console.log("RegistrarController");
   $scope.vacunarNene = function(nino_nw){
     console.log(nino_nw);
+    var ano= nino_nw.fecha_nac.getFullYear();
+    var mes=nino_nw.fecha_nac.getMonth()+1;
+    var dia=nino_nw.fecha_nac.getDate();
+    var fecha = ano+'-'+mes+'-'+dia;
+    nino_nw.fecha_nac = fecha;
+    console.log(nino_nw);
     $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
           $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
-            alert(response);
+            //alert(response);
             if(response.success){
-              alert(response.success);
+              //alert(response.success);
+              $ionicPopup.alert({ title: 'Mensaje', template: response.success });
               $location.path('/app/buscar').replace();
             }
             if (response.error) {
