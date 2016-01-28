@@ -49,10 +49,12 @@
           
         </div>
 </div>
-
-
 <div ng-show="showDatos">
+<button class="button button-block button-positive" ng-click="showtable()">Ver Calendario de Vacunas</button>
+
+
   <ul class="list">
+  <li class="item item-divider">Datos del Menor</li>
     <li class="item">Tipo de Documento : {{nino_ws.Tipo}}</li>
     <li class="item">Número : {{nino_ws.NuCnv}}</li>
     <li class="item">Sexo : {{nino_ws.Sexo}}</li>
@@ -61,8 +63,8 @@
     <li class="item">Talla al Nacer (cm) : {{nino_ws.Talla}}</li>
   
 </ul>
-<button class="button" ng-click="consularInicio()">Volver</button>
-<button class="button" ng-click="showtable()">Calendario</button>
+
+
 </div>
 
   </ion-content>

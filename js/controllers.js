@@ -17,7 +17,60 @@ angular.module('starter.controllers', ['uiGmapgoogle-maps', 'ngCordova', 'ui.rou
       return valor;
     };
   })
+  .filter('filterNutrientes', function(){
+    return function(input){
+      if(input==0){
+        var retorno = "No Entregado ";
+      }
+      else if(input==1){
+        var retorno = "Entregado ";
+      }
+      
+      return retorno;
+    };
+  })
+    .filter('primeraMayuscula', function(){
+    return function(input){
 
+      if(input){
+        var primera = input.substr(0,1);
+        var porcion = input.substring(1);
+        primera = primera.toUpperCase();
+        var retorno= primera+porcion;
+        return retorno;
+      }else{
+        return input;
+      }
+    };
+  })
+    .filter('filterNoData', function(){
+    return function(input){
+      if(input == null){
+        var retorno = "-";
+      }
+      else{
+        var retorno = input;
+      }
+      return retorno;
+    };
+  })
+  .filter('filterVacunasMeses', function(){
+  return function(id){
+    if(id == null){
+      var retorno = "dosis unica.";
+    }
+    else if (id == "0"){
+      var retorno = "Aplicable a recien nacidos.";
+    }
+    else if (id == "1"){
+      var retorno = "aplicable con 1 mes de edad.";
+    }
+    else{
+    var retorno = "aplicable con "+id+" meses de edad.";
+    }
+      return retorno;
+    };
+  })
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $ionicHistory, $location, $state, $rootScope) {
 
@@ -70,11 +123,16 @@ document.addEventListener('deviceready', function() {
 
     function ShowExitDialog() {
       if($state.current.name == "app.principal"){
-        navigator.app.exitApp();
+        navigator.notification.confirm(
+                ("¿Desea cerrar la aplicación?"), // message
+                exit, // callback
+                'Confirmación', // title
+                'Si,No' // buttonName
+        );
       }
       else if ($state.current.name == "app.profesional-buscar"){
         navigator.notification.confirm(
-                ("¿Desea cerrar sesión?"), // message
+                ("¿Desea finalizar sesión?"), // message
                 alertexit, // callback
                 'Confirmación', // title
                 'Si,No' // buttonName
@@ -83,6 +141,24 @@ document.addEventListener('deviceready', function() {
       else if ($state.current.name == "app.profesional-vacunar"){
         $state.go('app.profesional-buscar');
       }
+      else if ($state.current.name == "app.vacuna"){
+        $state.go('app.vacunas');
+      }
+       else if ($state.current.name == "app.resultados"){
+        $state.go('app.buscar');
+      }
+       else if ($state.current.name == "app.verAdicional"){
+        $state.go('app.resultados');
+      }
+       else if ($state.current.name == "app.buscar" && $rootScope.showDatos == true){
+              $rootScope.showDatos = false;
+              $state.go('app.buscar');
+      }
+  
+      else if ($state.current.name == "app.correos"){
+        $state.go('app.resultados');
+      }
+
       else{
         $state.go('app.principal');
       }
@@ -96,6 +172,12 @@ document.addEventListener('deviceready', function() {
         //$ionicHistory.goBack();
       $rootScope.usuario = false;
         $state.go('app.principal');
+        }
+    }
+     function exit(button){
+        if(button=="1" || button==1)
+        {
+            navigator.app.exitApp();
         }
     }
 
@@ -114,7 +196,7 @@ document.addEventListener('deviceready', function() {
 })
 
 .controller('PrincipalController', function($scope, $stateParams) {})
-.controller('VacunaController', function($scope, $stateParams, $http) {
+.controller('VacunaController', function($scope, $stateParams, $http, $rootScope) {
   console.log('stateParams');
   $scope.getVacuna = function(id) {
     $http(
@@ -132,7 +214,7 @@ document.addEventListener('deviceready', function() {
   console.log('VacunasController');
     $scope.getVacunas=function() {
       $http({method:'GET',url: 'http://esdeporvida.com/projects/minsa/api/android/getVacunas.php', headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
-        $scope.vacunas = response;
+        $rootScope.vacunas = response;
       });
     };
     $scope.getVacunas();
@@ -214,6 +296,11 @@ $ionicLoading.hide();
       $ionicLoading.hide();
       $location.path('/app/correos').replace();
   }
+
+  $scope.verAdicional = function() {
+      $ionicLoading.hide();
+      $location.path('/app/verAdicional').replace();
+  }
 })
 
 
@@ -230,14 +317,14 @@ $ionicLoading.hide();
 
 .controller('BuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope) {
   $scope.showTable=false;
-  $scope.showDatos = false;
+  $rootScope.showDatos = false;
   $scope.neneData = {"tipo":"3", "numero":42579084};
   //$scope.neneData = {"tipo":"1", "numero":1000999595};
 
 
   $scope.buscarNeneByCNV = function() {
   $scope.showTable=false;
-  $scope.showDatos = false;
+  $rootScope.showDatos = false;
    if($scope.neneData.tipo == "1"){
         console.log('BuscarController > buscarNeneByCNV');
         $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
@@ -259,7 +346,7 @@ $ionicLoading.hide();
                 $rootScope.nino_ws.FecNac = $rootScope.nino_ws.FecNac.substr(0,4) + "-" + $rootScope.nino_ws.FecNac.substr(4,2) + "-" + $rootScope.nino_ws.FecNac.substr(6,2);
                 console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
                 console.log('BuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
-                $scope.showDatos=true;    
+                $rootScope.showDatos=true;    
                 //$location.path('/app/resultados').replace();
             } else{
                 $ionicLoading.hide();
@@ -296,7 +383,7 @@ $ionicLoading.hide();
                     console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
                     console.log('BuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
                    $rootScope.nino_ws.Tipo = "DNI";
-                    $scope.showDatos=true;   
+                    $rootScope.showDatos=true;   
                     //$location.path('/app/resultados').replace();
                   } else{
                     $ionicLoading.hide();
@@ -351,9 +438,10 @@ $ionicLoading.hide();
       $ionicLoading.hide();
       $location.path('/app/resultados').replace();
   }
+
   $scope.consularInicio = function() {
       $ionicLoading.hide();
-      $scope.showDatos = false;
+      $rootScope.showDatos = false;
   }
 $scope.showtable = function() {
       $ionicLoading.hide();
@@ -575,7 +663,7 @@ $scope.showtable = function() {
 })
 
 
-.controller('correosController', function($scope, $stateParams, $location, $rootScope, $http, $ionicLoading,  $ionicPopup) {
+.controller('correosController', function($scope, $stateParams, $location, $rootScope, $http, $ionicLoading,  $ionicPopup, $state) {
  $scope.showCorreos=false;
 
  $http(
@@ -587,8 +675,9 @@ $scope.showtable = function() {
          
           if( response.success){
             $ionicLoading.hide();
-            $rootScope.infoAdicional        = response.success;
+            $rootScope.CorreosPorNino   = response.success;
             $scope.showCorreos=true;
+            //alert(response.success);
           }
 
          else{
@@ -597,12 +686,60 @@ $scope.showtable = function() {
             $ionicLoading.hide();
           }
       }).error(function() {
-          alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+          alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde..');
           $ionicLoading.hide();
       });
 
 
+    $scope.agregarEmail = function(correo){
+        $scope.loading = $ionicLoading.show({content: 'Guardando...', showBackdrop: true });        
+          $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/agregarCorreo.php', data:$.param({email : correo.new, NuCnv: $rootScope.nino_ws.NuCnv }), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+            $ionicLoading.hide();
+            if(response.success){
+              console.log(response.success);
+             // $location.path('/app/buscar').replace();
+              $ionicPopup.alert({ title: 'Listo!', template: 'El correo electronico fue registrado exitosamente.' });
+              $state.go('app.resultados');
+            }
+            if (response.error) {
+              $ionicPopup.alert({ title: 'Error', template: response.error });
+            }
+        }).error(function(){
+          $ionicLoading.hide();
+          $ionicPopup.alert({ title: 'Error', template: 'Lo lamento, el servidor no responde, por favor intentelo mas tarde.' });
+        });
+
+    };
 })
+
+.controller('verAdicionalController', function($scope, $stateParams, $location, $rootScope, $http, $ionicLoading,  $ionicPopup, $state) {
+ $scope.showinfoAdicional=false;
+
+ $http(
+        {method:'GET',
+        url: 'http://esdeporvida.com/projects/minsa/api/android/getInfoAdicional.php?numero='+$rootScope.nino_ws.NuCnv,
+        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+          console.log('ProfesionalBuscarController > buscarNeneByCNV : done');
+         
+         
+          if( response.success){
+            $ionicLoading.hide();
+            $rootScope.infoAdicional   = response.success;
+            $scope.showinfoAdicional=true;
+            //alert(response.success);
+          }
+
+         else{
+            console.log('ProfesionalBuscarController > buscarNeneByCNV : done : else');
+            alert("Lo lamento, " + response.error);
+            $ionicLoading.hide();
+          }
+      }).error(function() {
+          alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde..');
+          $ionicLoading.hide();
+      });
+})
+
 
 .controller('CentrosController', function( $scope, $state, $cordovaGeolocation, $ionicLoading, $http,  $ionicPopup) {
     $scope.first=true;

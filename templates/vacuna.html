@@ -5,9 +5,12 @@
         <div class="item item-divider">
           {{vacuna.nombre_vacuna}}
         </div>
+      <div class="item" ng-repeat="dosis in vacunas.dosis">{{ dosis.dosis }}  {{dosis.meses | filterVacunasMeses}}</div>
       </div>
     </div>
 
+
+<h5>Observaciones:</h5>
   <div class="card" style="padding: 20px;">
     <div class="item item-text-wrap">
       {{vacuna.observaciones}}

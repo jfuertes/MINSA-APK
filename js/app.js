@@ -60,7 +60,7 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGma
 
   .state('app.resultados', {
     url: '/resultados',
-    cache: false,
+    cache: true,
     views: {
       'menuContent': {
         templateUrl: 'templates/resultados.html',
@@ -107,6 +107,7 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGma
   })
   .state('app.correos', {
     url: '/correos',
+    cache: false,
     views: {
       'menuContent': {
         templateUrl: 'templates/correos.html',
@@ -114,9 +115,19 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGma
       }
     }
   })
+   .state('app.verAdicional', {
+    url: '/verAdicional',
+    cache: true,
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/verAdicional.html',
+        controller: 'verAdicionalController'
+      }
+    }
+  })
   .state('app.vacunas', {
     url: '/vacunas',
-    cache: false,
+    cache: true,
     views: {
       'menuContent': {
         templateUrl: 'templates/vacunas.html',

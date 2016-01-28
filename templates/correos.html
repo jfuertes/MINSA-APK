@@ -1,14 +1,19 @@
-<ion-view view-title="Buscar">
+<ion-view view-title="Correos Asociados">
   <ion-content has-header="true" padding="true" class="padding">
 
 
   	<div class="list">
+  	<form name="myForm" ng-submit="agregarEmail(correo)">
 	  <label class="item item-input">
-	    <input type="email" placeholder="Correo Electronico">
+	    <input type="email" name="email" placeholder="Correo Electronico" ng-model="correo.new" required>
+	  </label>
+	  <label class="item">
+	  <p ng-show="myForm.email.$error.required">* Digite Correo electronico completo.</p>
 	  </label>
 	  <label>
 	    <button class="button button-block button-positive icon-left ion-plus-circled" type="submit">Agregar Correo</button>
 	  </label>
+	  </form>
 	</div>
 
 	<div ng-hide="showCorreos">
@@ -19,7 +24,7 @@
 	<div ng-show="showCorreos">
 		<h4>Correos Registrados:</h4>
 		<ul class="list">
-		    <li class="item" ng-repeat="ad in infoAdicional">{{ad.email}}</li>
+		    <li class="item" ng-repeat="ad in CorreosPorNino">{{ad.email}}</li>
 		</ul>
 	</div>
 
