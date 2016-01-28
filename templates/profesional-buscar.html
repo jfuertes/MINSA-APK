@@ -1,15 +1,57 @@
 <ion-view view-title="Vacunar">
   <ion-content has-header="true" >
-    <form ng-submit="buscarNeneByCNV()">
-      <div class="list">
-        <label class="item item-input">
-          <span class="input-label">N&uacute;mero CNV:</span>
-          <input type="text" ng-model="neneData.numero" />
-        </label>
-        <label class="item">
+
+
+    
+   <div >
+    <form ng-submit="buscarNeneByCNV(neneData)">
+     <h4>Ingrese los datos del menor a vacunar:</h4>
+      
+
+      <label class="item item-input item-select">
+        <div class="input-label">
+          Tipo:
+        </div>
+        <select ng-model="neneData.tipo">
+                  <option  value="1">CNV del Niño</option>
+                  <option value="2">DNI del Niño</option>
+                  <option value="3">DNI de la madre</option>
+        </select>
+      </label>
+    
+      <label class="item item-input col-30">
+        <div class="input-label">
+          Número:
+        </div>
+        <input type="text" ng-model="neneData.numero" />
+      </label>
+   
+      <label class="item">
           <button class="button button-block button-positive icon-left ion-search" type="submit">Buscar</button>
-        </label>
-      </div>
-    </form>
+      </label>
+    </form></div>
+
+
+
+
+<div ng-show="showTable"  class="card">
+     <div class="row header" >
+          <div class="col col-38">N° de CNV</div>
+          <div class="col col-27">Fecha Nac.</div>
+          <div class="col col-15">Sexo</div>
+          <div class="col col-15">Peso (gr)</div>
+          <div class="col col-5">Talla (cm)</div>
+        </div>
+        <div class="row item item-divider" ng-repeat="n in ninos_ws " ng-click="selecNino($index)">
+          <div class="col col-38"><button class="button button-small">{{n.NuCnv}}</button></div>
+          <div class="col col-27"><button class="button button-small">{{n.FecNac}}</button></div>
+          <div class="col col-15"><button class="button button-small">{{n.Sexo}}</button></div>
+          <div class="col col-15"><button class="button button-small">{{n.Peso}}</button></div>
+          <div class="col col-55"><button class="button button-small">{{n.Talla}}</button></div>
+          
+        </div>
+</div>
+
+
   </ion-content>
 </ion-view>

@@ -97,6 +97,7 @@ angular.module('starter', ['ionic', 'angularMoment','starter.controllers','uiGma
     }
   })
   .state('app.buscar', {
+    cache: false,
     url: '/buscar',
     views: {
       'menuContent': {

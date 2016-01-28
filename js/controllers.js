@@ -141,6 +141,13 @@ document.addEventListener('deviceready', function() {
       else if ($state.current.name == "app.profesional-vacunar"){
         $state.go('app.profesional-buscar');
       }
+          
+      else if ($state.current.name == "app.vacunarlo-ya"){
+        $state.go('app.profesional-vacunar');
+      }
+       else if ($state.current.name == "app.adicional"){
+        $state.go('app.profesional-vacunar');
+      }
       else if ($state.current.name == "app.vacuna"){
         $state.go('app.vacunas');
       }
@@ -154,6 +161,11 @@ document.addEventListener('deviceready', function() {
               $rootScope.showDatos = false;
               $state.go('app.buscar');
       }
+       else if ($state.current.name == "app.profesional-buscar" && $rootScope.showDatosProf == true){
+              $rootScope.showDatosProf = false;
+              $state.go('app.profesional-buscar');
+      }
+  
   
       else if ($state.current.name == "app.correos"){
         $state.go('app.resultados');
@@ -406,13 +418,18 @@ $ionicLoading.hide();
               console.log('BuscarController > buscarNeneByCNV : done');
               delete $rootScope.nino_ws;
               if( response.success){
-     
-                console.log('BuscarController > buscarNeneByCNV : done : if');
-                $ionicLoading.hide();
-
-                $rootScope.ninos_ws        = response.success;
-          
-                $scope.showTable=true;
+                if(response.success.length){
+                      $ionicLoading.hide();
+                      $rootScope.ninos_ws = response.success;
+                      $scope.showTable=true;
+                }
+                else{
+                      $ionicLoading.hide();
+                      $rootScope.ninos_ws = [{'0':''}];
+                      $rootScope.ninos_ws[0] = response.success ;
+                      $scope.showTable=true;
+                }
+              
                 console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
                 console.log('BuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
                // $location.path('/app/resultados').replace();
@@ -561,36 +578,119 @@ $scope.showtable = function() {
 })
 
 .controller('ProfesionalBuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope, $ionicHistory) {
- 
+ $scope.showTable=false;
   console.log('ProfesionalBuscarController > $rootScope.usuario', $rootScope.usuario);
-  $scope.neneData = {"numero":1000999595};
+  $scope.neneData = {"tipo":"3", "numero":42579084};
+  //$scope.neneData = {"numero":1000999595};
   $scope.buscarNeneByCNV = function() {
-  
-    console.log('ProfesionalBuscarController > buscarNeneByCNV');
-    $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
-      $http(
-        {method:'GET',
-        url: 'http://esdeporvida.com/projects/minsa/api/wsByNumero.php?numero='+$scope.neneData.numero,
-        headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
-          console.log('ProfesionalBuscarController > buscarNeneByCNV : done');
-          delete $rootScope.nino_ws;
-          if( response.success){
-            console.log('ProfesionalBuscarController > buscarNeneByCNV : done : if');
-            $ionicLoading.hide();
-            $rootScope.nino_ws        = response.success;
-            $rootScope.nino_ws.FecNac = $rootScope.nino_ws.FecNac.substr(0,4) + "-" + $rootScope.nino_ws.FecNac.substr(4,2) + "-" + $rootScope.nino_ws.FecNac.substr(6,2);
-            console.log('ProfesionalBuscarController > buscarNeneByCNV : done : if : response', response);
-            console.log('ProfesionalBuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
-            $location.path('/app/profesional-vacunar').replace();
-          } else{
-            console.log('ProfesionalBuscarController > buscarNeneByCNV : done : else');
-            alert("Lo lamento, " + response.error);
-            $ionicLoading.hide();
-          }
-      }).error(function() {
-          alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
-          $ionicLoading.hide();
-      });
+    if($scope.neneData.tipo=="1"){
+        console.log('ProfesionalBuscarController > buscarNeneByCNV');
+        $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
+          $http(
+            {method:'GET',
+            url: 'http://esdeporvida.com/projects/minsa/api/wsByNumero.php?numero='+$scope.neneData.numero,
+            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+              console.log('ProfesionalBuscarController > buscarNeneByCNV : done');
+              delete $rootScope.nino_ws;
+              if( response.success){
+                console.log('ProfesionalBuscarController > buscarNeneByCNV : done : if');
+                $ionicLoading.hide();
+                $rootScope.nino_ws        = response.success;
+                $rootScope.nino_ws.FecNac = $rootScope.nino_ws.FecNac.substr(0,4) + "-" + $rootScope.nino_ws.FecNac.substr(4,2) + "-" + $rootScope.nino_ws.FecNac.substr(6,2);
+                console.log('ProfesionalBuscarController > buscarNeneByCNV : done : if : response', response);
+                console.log('ProfesionalBuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
+                $location.path('/app/profesional-vacunar').replace();
+              } else{
+                console.log('ProfesionalBuscarController > buscarNeneByCNV : done : else');
+                alert("Lo lamento, " + response.error);
+                $ionicLoading.hide();
+              }
+          }).error(function() {
+              alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+              $ionicLoading.hide();
+          });
+
+    }
+    else if($scope.neneData.tipo=="2"){
+           console.log('BuscarController > buscarNeneByCNV');
+            $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
+              $http(
+                {method:'GET',
+                url: 'http://esdeporvida.com/projects/minsa/api/wsbyDNI.php?numero='+$scope.neneData.numero,
+                headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+                  console.log('BuscarController > buscarNeneByCNV : done');
+                  delete $rootScope.nino_ws;
+                  if( response.success){
+             
+                    console.log('BuscarController > buscarNeneByCNV : done : if');
+                    $ionicLoading.hide();
+                    $rootScope.nino_ws        = response.success;
+
+                    $rootScope.nino_ws.FecNac = $rootScope.nino_ws.fecha_nac;
+                    $rootScope.nino_ws.Talla = $rootScope.nino_ws.talla;
+                    $rootScope.nino_ws.Peso = $rootScope.nino_ws.peso;
+                    $rootScope.nino_ws.NuCnv = $rootScope.nino_ws.nro_documento;
+
+                    console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
+                    console.log('BuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
+                   $rootScope.nino_ws.Tipo = "DNI";
+                   $location.path('/app/profesional-vacunar').replace();
+                    //$rootScope.showDatos=true;   
+                    //$location.path('/app/resultados').replace();
+                  } else{
+                    $ionicLoading.hide();
+                    console.log('BuscarController > buscarNeneByCNV : done : else');
+                    alert("Lo lamento, " + response.error);
+                  }
+              }).error(function() {
+                  alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+                  $ionicLoading.hide();
+              });
+
+    }
+    else if ($scope.neneData.tipo=="3"){
+              console.log('BuscarController > buscarNeneByCNV');
+        $scope.loading = $ionicLoading.show({content: 'Buscando...', showBackdrop: true });
+          $http(
+            {method:'GET',
+            url: 'http://esdeporvida.com/projects/minsa/api/wsByDniMadre.php?numero='+$scope.neneData.numero,
+            headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+              console.log('BuscarController > buscarNeneByCNV : done');
+              delete $rootScope.nino_ws;
+              if( response.success){
+                if(response.success.length){
+                      $ionicLoading.hide();
+                      $rootScope.ninos_ws = response.success;
+                      $scope.showTable=true;
+                }
+                else{
+                      $ionicLoading.hide();
+                      $rootScope.ninos_ws = [{'0':''}];
+                      $rootScope.ninos_ws[0] = response.success ;
+                      $scope.showTable=true;
+                }
+              
+                console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
+                console.log('BuscarController > buscarNeneByCNV : done : if : $rootScope.nino_ws', $rootScope.nino_ws);
+               // $location.path('/app/resultados').replace();
+
+
+             } else{
+                $ionicLoading.hide();
+                console.log('BuscarController > buscarNeneByCNV : done : else');
+                alert("Lo lamento, " + response.error);
+              }
+          }).error(function() {
+              alert('Lo lamento, el servidor no esta respondiendo. por favor intentelo mas tarde.');
+              $ionicLoading.hide();
+          });
+
+    }
+     $scope.selecNino = function(index) {
+      $rootScope.nino_ws = $rootScope.ninos_ws[index];
+      $ionicLoading.hide();
+      $location.path('/app/profesional-vacunar').replace();
+  }
   };
 
   $scope.checkUser = function () {
@@ -648,8 +748,9 @@ $scope.showtable = function() {
     $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
           $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
             $ionicLoading.hide();
+            alert(response);
             if(response.success){
-              console.log(response.success);
+              alert(response.success);
               $location.path('/app/buscar').replace();
             }
             if (response.error) {
@@ -723,11 +824,14 @@ $scope.showtable = function() {
          
          
           if( response.success){
+            if(response.success.length==0){
+            }
+            else{
             $ionicLoading.hide();
             $rootScope.infoAdicional   = response.success;
             $scope.showinfoAdicional=true;
             //alert(response.success);
-          }
+          }}
 
          else{
             console.log('ProfesionalBuscarController > buscarNeneByCNV : done : else');

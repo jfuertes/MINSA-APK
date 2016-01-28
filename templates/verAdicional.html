@@ -2,11 +2,11 @@
   <ion-content has-header="true" padding="true" class="padding">
 
     <div ng-hide="showinfoAdicional">
-      <p>No se encontro ninguna hasta el momento</p>
+      <h4>No se encuentran datos adicionales registrados para el niño consultado</h4>
     </div>
 
     <div ng-show="showinfoAdicional">
-      <h4>Consultas:</h4>
+      <h4>Consultas Previas:</h4>
       <div class="card" ng-repeat="ad in infoAdicional">
         <ul class="list">
             <li class="item item-divider">Fecha de toma de datos: {{ad.fecha_medicion | filterNoData}}</li>
