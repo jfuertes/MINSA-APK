@@ -1,4 +1,4 @@
-angular.module('starter.controllers', ['uiGmapgoogle-maps', 'ngCordova', 'ui.router'])
+ angular.module('starter.controllers', ['uiGmapgoogle-maps', 'ngCordova', 'ui.router'])
 
   .filter('sexoFilter', function(){
     return function(input){
@@ -152,12 +152,14 @@ document.addEventListener('deviceready', function() {
         $state.go('app.vacunas');
       }
        else if ($state.current.name == "app.resultados"){
+
         $state.go('app.buscar');
       }
        else if ($state.current.name == "app.verAdicional"){
         $state.go('app.resultados');
       }
        else if ($state.current.name == "app.buscar" && $rootScope.showDatos == true){
+            $rootScope.showListaensegunda = false;
               $rootScope.showDatos = false;
               $state.go('app.buscar');
       }
@@ -330,11 +332,14 @@ $ionicLoading.hide();
 .controller('BuscarController', function($scope, $stateParams, $location, $http, $ionicLoading, $rootScope) {
   $scope.showTable=false;
   $rootScope.showDatos = false;
+  $rootScope.showListaensegunda = true;
+  $rootScope.showAmbos = true;
   $scope.neneData = {"tipo":"3", "numero":42579084};
   //$scope.neneData = {"tipo":"1", "numero":1000999595};
 
 
   $scope.buscarNeneByCNV = function() {
+    $rootScope.showListaensegunda = true;
   $scope.showTable=false;
   $rootScope.showDatos = false;
    if($scope.neneData.tipo == "1"){
@@ -390,6 +395,7 @@ $ionicLoading.hide();
                     $rootScope.nino_ws.FecNac = $rootScope.nino_ws.fecha_nac;
                     $rootScope.nino_ws.Talla = $rootScope.nino_ws.talla;
                     $rootScope.nino_ws.Peso = $rootScope.nino_ws.peso;
+                    $rootScope.nino_ws.Sexo = $rootScope.nino_ws.sexo;
                     $rootScope.nino_ws.NuCnv = $rootScope.nino_ws.nro_documento;
 
                     console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
@@ -422,12 +428,16 @@ $ionicLoading.hide();
                       $ionicLoading.hide();
                       $rootScope.ninos_ws = response.success;
                       $scope.showTable=true;
+                      $rootScope.showDatos=true; 
+                      $rootScope.showAmbos = false;
                 }
                 else{
                       $ionicLoading.hide();
                       $rootScope.ninos_ws = [{'0':''}];
                       $rootScope.ninos_ws[0] = response.success ;
                       $scope.showTable=true;
+                      $rootScope.showDatos=true; 
+                      $rootScope.showAmbos = false;
                 }
               
                 console.log('BuscarController > buscarNeneByCNV : done : if : response', response);
@@ -453,7 +463,9 @@ $ionicLoading.hide();
   $scope.selecNino = function(index) {
       $rootScope.nino_ws = $rootScope.ninos_ws[index];
       $ionicLoading.hide();
-      $location.path('/app/resultados').replace();
+      $rootScope.showAmbos = true;
+      
+      //$location.path('/app/resultados').replace();
   }
 
   $scope.consularInicio = function() {
@@ -708,6 +720,7 @@ $scope.showtable = function() {
   if (!$rootScope.usuario) {
     console.log('LogeoController > if');
     $scope.loginData = {};
+
     $scope.doLogin = function() {
       if( $scope.loginData.username && $scope.loginData.password ) {
         console.log($scope.loginData);
@@ -744,22 +757,36 @@ $scope.showtable = function() {
   
   console.log("RegistrarController");
   $scope.vacunarNene = function(nino_nw){
-    console.log(nino_nw);
-    $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-          $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
-            $ionicLoading.hide();
-            alert(response);
-            if(response.success){
-              alert(response.success);
-              $location.path('/app/buscar').replace();
-            }
-            if (response.error) {
-              $ionicPopup.alert({ title: 'Error', template: response.error });
-            }
-        }).error(function(){
-          $ionicLoading.hide();
-          $ionicPopup.alert({ title: 'Error', template: 'Lo lamento, el servidor no responde, por favor intentelo mas tarde.' });
-        });
+    //alert(nino_nw.fecha_nac);
+    //alert(JSON.stringify(nino_nw.fecha_nac));
+    var fechaString=JSON.stringify(nino_nw.fecha_nac);
+
+    nino_nw.fecha_nac = fechaString.slice(1,11);
+  
+ ///alert(nino_nw.fecha_nac);
+    if(Math.floor(Math.log10(nino_nw.nro_documento))==7){
+              $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
+              $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+                $ionicLoading.hide();
+                //alert(response.success);
+                if(response.success == 'ya existe'){
+                  $ionicPopup.alert({ title: 'Error', template: 'Ya se encuentra registrado ese DNI, verifiquelo a continuación' });
+                  $location.path('/app/buscar').replace();
+                }
+                else if (response.success == true){
+                    $ionicPopup.alert({ title: 'Registro Exitoso', template: 'Puede verificarlo buscando a continuación' });
+                  $location.path('/app/buscar').replace();
+                }
+                
+            }).error(function(){
+              $ionicLoading.hide();
+              $ionicPopup.alert({ title: 'Error', template: 'Lo lamento, el servidor no responde, por favor intentelo mas tarde.' });
+            });
+        }
+    else{
+        $ionicPopup.alert({ title: 'Error', template: 'No corresponde a un número de DNI valido' });
+
+    }
   };
 })
 

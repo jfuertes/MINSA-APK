@@ -31,8 +31,10 @@
       </label>
     </form></div>
 
+<div  ng-show="showTable && showListaensegunda">
+<h4>Seleccione el niño: </h4>
+<div  class="card">
 
-<div ng-show="showTable"  class="card">
      <div class="row header" >
           <div class="col col-38">N° de CNV</div>
           <div class="col col-27">Fecha Nac.</div>
@@ -48,16 +50,16 @@
           <div class="col col-55"><button class="button button-small">{{n.Talla}}</button></div>
           
         </div>
-</div>
-<div ng-show="showDatos">
+</div></div>
+<div ng-show="showDatos && showAmbos">
 <button class="button button-block button-positive" ng-click="showtable()">Ver Calendario de Vacunas</button>
 
 
   <ul class="list">
   <li class="item item-divider">Datos del Menor</li>
-    <li class="item">Tipo de Documento : {{nino_ws.Tipo}}</li>
+    <li class="item" ng-hide="showTable">Tipo de Documento : {{nino_ws.Tipo}}</li>
     <li class="item">Número : {{nino_ws.NuCnv}}</li>
-    <li class="item">Sexo : {{nino_ws.Sexo}}</li>
+    <li class="item">Sexo : {{nino_ws.Sexo | sexoFilter}}</li>
     <li class="item">Fecha de Nacimiento : {{nino_ws.FecNac}}</li>
     <li class="item">Peso al Nacer (gr) : {{nino_ws.Peso}}</li>
     <li class="item">Talla al Nacer (cm) : {{nino_ws.Talla}}</li>

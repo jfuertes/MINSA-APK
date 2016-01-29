@@ -13,8 +13,8 @@
         </label>
 
         <label class="item item-input">
-          <span class="input-label">Temperatura(c)</span>
-          <input type="text" ng-model="nino_ws.temperatura">
+          <span class="input-label">Temperatura(°C)</span>
+          <input type="number" step="any" ng-model="nino_ws.temperatura">
         </label>
 
 
@@ -37,6 +37,13 @@
           <input type="date" ng-model="nino_ws.fecha_medicion">
         </label>
 
+        <label class="item item-input">
+          <span class="input-label">Observaciones:</span>
+        </label>
+
+        <label class="item item-input">
+          <textarea he type="text" ng-model="nino_ws.observaciones"></textarea> 
+        </label>
         <label class="item">
           	<button class="button button-block button-positive" type="submit">Guardar</button>
         </label>
