@@ -755,7 +755,6 @@ $scope.showtable = function() {
   
   console.log("RegistrarController");
   $scope.vacunarNene = function(nino_nw){
-<<<<<<< HEAD
     //alert(nino_nw.fecha_nac);
     //alert(JSON.stringify(nino_nw.fecha_nac));
     var fechaString=JSON.stringify(nino_nw.fecha_nac);
@@ -765,7 +764,7 @@ $scope.showtable = function() {
  ///alert(nino_nw.fecha_nac);
     if(Math.floor(Math.log10(nino_nw.nro_documento))==7){
               $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-              $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+              $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
                 $ionicLoading.hide();
                 //alert(response.success);
                 if(response.success == 'ya existe'){
@@ -786,31 +785,6 @@ $scope.showtable = function() {
         $ionicPopup.alert({ title: 'Error', template: 'No corresponde a un número de DNI valido' });
 
     }
-=======
-    console.log(nino_nw);
-    var ano= nino_nw.fecha_nac.getFullYear();
-    var mes=nino_nw.fecha_nac.getMonth()+1;
-    var dia=nino_nw.fecha_nac.getDate();
-    var fecha = ano+'-'+mes+'-'+dia;
-    nino_nw.fecha_nac = fecha;
-    console.log(nino_nw);
-    $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-          $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
-            $ionicLoading.hide();
-            //alert(response);
-            if(response.success){
-              //alert(response.success);
-              $ionicPopup.alert({ title: 'Mensaje', template: response.success });
-              $location.path('/app/buscar').replace();
-            }
-            if (response.error) {
-              $ionicPopup.alert({ title: 'Error', template: response.error });
-            }
-        }).error(function(){
-          $ionicLoading.hide();
-          $ionicPopup.alert({ title: 'Error', template: 'Lo lamento, el servidor no responde, por favor intentelo mas tarde.' });
-        });
->>>>>>> 6ccfdb978ea251510d0d23e1c7e1dc8a4c04dbd2
   };
 })
 
