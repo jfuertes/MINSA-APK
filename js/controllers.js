@@ -765,7 +765,7 @@ $scope.showtable = function() {
  ///alert(nino_nw.fecha_nac);
     if(Math.floor(Math.log10(nino_nw.nro_documento))==7){
               $scope.loading = $ionicLoading.show({content: 'Registrando...', showBackdrop: true });
-              $http({method:'POST',url: 'http://esdeporvida.com/projects/minsa/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
+              $http({method:'POST',url: NombreServer.SERVER_IP+'/api/android/registrar.php', data:$.param(nino_nw), headers : { 'Content-Type': 'application/x-www-form-urlencoded' }}).success(function(response) {
                 $ionicLoading.hide();
                 //alert(response.success);
                 if(response.success == 'ya existe'){
