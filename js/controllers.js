@@ -235,7 +235,7 @@ document.addEventListener('deviceready', function() {
 .controller('ResultadosDetailController', function($scope, $stateParams) { })
 
 
-.controller('ResultadosController', function($scope, $location,$rootScope, $http, $ionicLoading, NombreServer) {
+.controller('ResultadosController', function($scope, $location,$rootScope, $http, $ionicLoading, $state, NombreServer) {
   console.log('ResultadosController ');
   $scope.getChildVacunas = function () {
     console.log('ResultadosController > getChildVacunas');
@@ -312,7 +312,9 @@ $ionicLoading.hide();
 
   $scope.verAdicional = function() {
       $ionicLoading.hide();
-      $location.path('/app/verAdicional').replace();
+      alert("ver adicional");
+      $state.go('app.verAdicional');
+     
   }
 })
 
